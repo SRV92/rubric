@@ -36,12 +36,12 @@
         public function login($user_name, $user_email, $user_password)
         {
             try {
-                $stmt = $this->db->prepare('SELECT * FROM users WHERE user_name=:user_name OR user_email=:user_email LIMIT 1');
+                $stmt = $this->db->prepare("SELECT * FROM users WHERE user_name=:user_name OR user_email=:user_email LIMIT 1");
                 $stmt->execute(array(':user_name' => $user_name, ':user_email' => $user_email));
                 $user_row = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($stmt->rowCount() > 0) {
                     if (password_verify($user_password, $user_row['user_password'])) {
-                        $_SESSION['user_session'] = $user_row['id'];
+                        $_SESSION['user_session'] = $user_row['user_id'];
 
                         return true;
                     } else {
@@ -63,9 +63,9 @@
         }
 
         // function to check if users are logged in
-        public function login_status()
+        public function is_logged_in()
         {
-            if(isset($_SESSION('user_session'))) {
+            if (isset($_SESSION['user_session'])) {
                 return true;
             } else {
                 return false;
@@ -74,6 +74,6 @@
 
         // function to redirect user
         public function redirect($url) {
-            header('Location: $url');
+            header("Location: $url");
         }
     }
