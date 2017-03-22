@@ -1,9 +1,9 @@
 <?php
     // load config file
-    require_once 'resources/config.php';
+    require_once ('resources/config.php');
 
     // load the templated header
-    require_once TEMPLATE_PATH.'/header.php';
+    require_once (TEMPLATE_PATH.'/header.php');
 
     if ($user->is_logged_in()) {
         $user->redirect('index.php');
@@ -22,17 +22,25 @@
     }
 ?>
 
-<form method="post">
-    <?php
-        if (isset($error)) {
-            echo 'error' . '<br />';
-        }
-    ?>
-    <label for="user_name_text_box">Username:</label>
-    <input type="text" name="user_name_text_box" />
+<div id="content">
+    <div class="container">
+        <form method="post">
+            <?php
+                if (isset($error)) {
+                    echo 'error' . '<br />';
+                }
+            ?>
+            <label for="user_name_text_box">Username:</label>
+            <input type="text" name="user_name_text_box" />
 
-    <label for="user_password_text_box">Password:</label>
-    <input type="text" name="user_password_text_box" />
+            <label for="user_password_text_box">Password:</label>
+            <input type="text" name="user_password_text_box" />
 
-    <button type="submit" name="btn-login">Login</button>
-</form>
+            <button type="submit" name="btn-login">Login</button>
+        </form>
+    </div>
+</div>
+
+<?php
+    require_once (TEMPLATE_PATH.'/footer.php');
+ ?>

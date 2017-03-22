@@ -8,3 +8,10 @@
 
         <title>Rubric Me: Student &amp; Lecturer Tool</title>
     </head>
+    <body>
+
+        <div id="header">
+            <div class="container">
+                header container
+            </div>
+        </div>

@@ -1,4 +1,10 @@
 <?php
+
+    // show data in json format for testing
+    // header('Content-Type: application/json');
+
+    require_once('class.schema.php');
+
     class Rubric
     {
         private $db;
@@ -8,7 +14,6 @@
         {
             $this->db = $conn;
         }
-
         // function to create a rubric table
         public function create_rubric_table($table_name)
         {
@@ -28,5 +33,45 @@
                 echo $e->getMessage();
             }
         }
+
+        public function get_tables() {
+           try {
+               // sql statement to show to tables
+               $stmt = $this->db->prepare('SHOW TABLES');
+               $stmt->execute();
+               $result = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+               if ($stmt->rowCount() > 0) {
+                   return array('rows_in_table' => $stmt->rowCount(), 'data' => array('tables' => $result));
+               } else {
+                   return array('status' => 'ERROR', 'message' => 'No tables found in selected database.');
+               }
+
+           } catch (PDOException $e) {
+               echo $e->getMessage();
+           }
+       }
+
+       // get the contents of a specific table passed into the variable as parameter
+       public function get_table_contents($table)
+       {
+           try {
+               // gets list of the tables from this class
+               $list_of_tables = $this->get_tables();
+
+               if(in_array($table, $list_of_tables['data']['tables'])) {
+                   $stmt = "SELECT * FROM ".$table;
+                   $stmt = $this->db->query($stmt);
+
+                   $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                   return array('table' => $table, 'rows_in_table' => $stmt->rowCount(), 'data' => $result);
+               } else {
+                   return array('status' => 'ERROR', 'message' => 'Table was not found in selected database');
+               }
+
+           } catch (PDOException $e) {
+               echo $e->getMessage();
+           }
+       }
     }
 ?>
