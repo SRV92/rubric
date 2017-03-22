@@ -11,7 +11,7 @@
 
         // function to register a new user
         // pass in required parameters to populate database
-        public function register($first_name, $last_name, $user_name, $user_email, $user_password)
+        public function register($user_name, $user_email, $user_password)
         {
             try {
                 $new_password = password_hash($user_password, PASSWORD_DEFAULT);
@@ -67,9 +67,7 @@
         {
             if (isset($_SESSION['user_session'])) {
                 return true;
-            } else {
-                return false;
-            }
+            } 
         }
 
         // function to redirect user

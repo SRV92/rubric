@@ -1,17 +1,11 @@
 <?php
-    require_once ('resources/config.php');
+    require_once ('login_status.php');
 
     require_once (TEMPLATE_PATH.'/header.php');
 
     require_once ('resources/library/class.rubric.php');
 
     require_once ('resources/library/class.module.php');
-
-    if ($user->is_logged_in()) {
-        echo 'logged in';
-    } else {
-        echo 'not logged in';
-    }
 
     $rubric = new Rubric($conn);
     $module = new Module($conn);

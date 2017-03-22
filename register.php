@@ -32,7 +32,7 @@
                 } else if ($row['user_email'] == $user_email) {
                     $error[] = 'Email address is already registered';
                 } else {
-                    if ($user->register($first_name, $last_name, $user_name, $user_email, $user_password)) {
+                    if ($user->register($user_name, $user_email, $user_password)) {
                         $user->redirect('register.php?joined');
                     }
                 }

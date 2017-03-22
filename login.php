@@ -5,10 +5,6 @@
     // load the templated header
     require_once (TEMPLATE_PATH.'/header.php');
 
-    if ($user->is_logged_in()) {
-        $user->redirect('index.php');
-    }
-
     if (isset($_POST['btn-login'])) {
         $user_name = $_POST['user_name_text_box'];
         $user_email = $_POST['user_name_text_box'];

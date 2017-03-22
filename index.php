@@ -1,14 +1,11 @@
 <?php
-    require_once ('resources/config.php');
+    require_once ('login_status.php');
 
-    require_once (TEMPLATE_PATH.'/header.php');
-
-    if (!$user->is_logged_in()) {
-        $user->redirect('login.php');
-    } else {
+    if ($user->is_logged_in()) {
         $user->redirect('home.php');
     }
 
+    require_once (TEMPLATE_PATH.'/header.php');
  ?>
 
  <?php

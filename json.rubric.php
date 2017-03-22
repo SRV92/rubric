@@ -1,5 +1,5 @@
 <?php
-    require_once ('resources/config.php');
+    require_once ('login_status.php');
     require_once ('resources/library/class.rubric.php');
 
     // main program body
