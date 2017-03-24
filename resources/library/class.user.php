@@ -1,4 +1,7 @@
 <?php
+
+    require_once 'class.schema.php';
+
     class User
     {
         private $db;
@@ -17,7 +20,7 @@
                 $new_password = password_hash($user_password, PASSWORD_DEFAULT);
 
                 // SQL statement to be held in variable
-                $stmt = $this->db->prepare('INSERT INTO users(user_name, user_email, user_password)
+                $stmt = $this->db->prepare('INSERT INTO user(user_name, user_email, user_password)
                                             VALUES(:user_name, :user_email, :user_password)');
 
                 $stmt->bindparam(':user_name', $user_name);
@@ -36,7 +39,7 @@
         public function login($user_name, $user_email, $user_password)
         {
             try {
-                $stmt = $this->db->prepare("SELECT * FROM users WHERE user_name=:user_name OR user_email=:user_email LIMIT 1");
+                $stmt = $this->db->prepare('SELECT * FROM user WHERE user_name=:user_name OR user_email=:user_email LIMIT 1');
                 $stmt->execute(array(':user_name' => $user_name, ':user_email' => $user_email));
                 $user_row = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($stmt->rowCount() > 0) {
@@ -53,6 +56,108 @@
             }
         }
 
+        // function to check if users are logged in
+        public function is_logged_in()
+        {
+            if (isset($_SESSION['user_session'])) {
+                return true;
+            }
+        }
+
+        // function to redirect user
+        public function redirect($url)
+        {
+            header("Location: $url");
+        }
+
+        public function get_columns_in_table($table)
+        {
+            header('Content-Type: application/json');
+            try {
+                $stmt = "SELECT COLUMN_NAME
+                         FROM INFORMATION_SCHEMA.COLUMNS
+                         WHERE TABLE_SCHEMA = 'rubric'
+                         AND TABLE_NAME = '$table'";
+
+                $stmt = $this->db->prepare($stmt);
+                $stmt->execute();
+
+                $result = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+                return array('table' => $table, 'rows_in_table' => $stmt->rowCount(), 'data' => array('columns' => $result));
+            } catch (PDOException $error) {
+                return array('status' => 'ERROR', 'message' => $error->getMessage());
+            }
+        }
+
+        // generate a list of users
+        public function get_contents_in_table($table)
+        {
+            header('Content-Type: application/json');
+            try {
+                $stmt = $this->db->prepare("SELECT * FROM $table");
+                $stmt->execute();
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                return array('table' => $table,
+                             'rows_in_table' => $stmt->rowCount(),
+                             'columns_in_table' => $stmt->columnCount(),
+                             'data' => $result, );
+            } catch (PDOException $e) {
+                $e->getMessage();
+            }
+        }
+
+        public function list_enrolled_modules()
+        {
+            header('Content-Type: application/json');
+            try {
+                $user_id = $_SESSION['user_session'];
+                $stmt = $this->db->prepare('SELECT * FROM user_modules WHERE user_id=:user_id');
+                $stmt->execute(array(':user_id' => $user_id));
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                if ($stmt->rowCount() > 0) {
+                    return array('rows_in_table' => $stmt->rowCount(),
+                                 'columns_in_table' => $stmt->columnCount(),
+                                 'data' => $result);
+                } else {
+                    return array('status' => 'ERROR', 'message' => 'No data in table.');
+                }
+            } catch (PDOException $e) {
+                $e->getMessage();
+            }
+        }
+
+        public function list_user_assignments()
+        {
+            header('Content-Type: application/json');
+            try {
+                $user_id = $_SESSION['user_session'];
+
+                $stmt = $this->db->prepare('SELECT user.user_id, user.user_name,
+                                            module.module_id, module.module_name,
+                                            assignment.assignment_id,
+                                            assignment.assignment_name
+                                            FROM user, module, assignment
+                                            WHERE user_id=:user_id');
+                                            
+                $stmt->execute(array(':user_id' => $user_id));
+
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                if ($stmt->rowCount() > 0) {
+                    return array('rows_in_table' => $stmt->rowCount(),
+                                 'columns_in_table' => $stmt->columnCount(),
+                                 'data' => $result);
+                } else {
+                    return array('status' => 'ERROR', 'message' => 'No data in table');
+                }
+            } catch (PDOException $e) {
+                $e->getMessage();
+            }
+        }
+
         // function to log the user out
         public function logout()
         {
@@ -60,18 +165,7 @@
             session_destroy();
             // unset a given variable
             unset($_SESSION['user_session']);
-        }
 
-        // function to check if users are logged in
-        public function is_logged_in()
-        {
-            if (isset($_SESSION['user_session'])) {
-                return true;
-            } 
-        }
-
-        // function to redirect user
-        public function redirect($url) {
-            header("Location: $url");
+            return true;
         }
     }

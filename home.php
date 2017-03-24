@@ -3,30 +3,24 @@
 
     require_once (TEMPLATE_PATH.'/header.php');
 
-    require_once ('resources/library/class.rubric.php');
+    require_once (TEMPLATE_PATH.'/nav.php');
 
-    require_once ('resources/library/class.module.php');
-
-    $rubric = new Rubric($conn);
-    $module = new Module($conn);
-
-    if (isset($_POST['create_new_rubric_btn'])) {
-        $table_name = trim($_POST['rubric_table_name_text_box']);
-        $rubric->create_rubric_table($table_name);
-    }
-
-    if (isset($_POST['create_new_module_btn'])) {
-        $table_name = trim($_POST['module_table_name_text_box']);
-        $module->create_module_table($table_name);
-    }
+    // $rubric = new Rubric($conn);
+    // $module = new Module($conn);
+    //
+    // if (isset($_POST['create_new_rubric_btn'])) {
+    //     $table_name = trim($_POST['rubric_table_name_text_box']);
+    //     $rubric->create_rubric_table($table_name);
+    // }
+    //
+    // if (isset($_POST['create_new_module_btn'])) {
+    //     $table_name = trim($_POST['module_table_name_text_box']);
+    //     $module->create_module_table($table_name);
+    // }
 
  ?>
 
- <div class="pages_nav">
-     <a href="rubric.php">rubrics</a>
- </div>
-
- <div id="content">
+ <!-- <div id="content">
      <div class="container">
          <form method="post">
              <label for="rubric_table_name_text_box">Table name: </label>
@@ -38,7 +32,7 @@
              <button type="submit" name="create_new_module_btn">Create module</button>
          </form>
      </div>
- </div>
+ </div> -->
 
 
 <?php

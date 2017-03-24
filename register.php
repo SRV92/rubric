@@ -1,7 +1,9 @@
 <?php
-    require_once 'resources/config.php';
+    require_once ('resources/config.php');
 
-    require_once TEMPLATE_PATH.'/header.php';
+    require_once (TEMPLATE_PATH.'/header.php');
+
+    require_once (TEMPLATE_PATH.'/nav.php');
 
     if (isset($_POST['btn-register'])) {
         $user_name      = trim($_POST['user_name_text_box']);
@@ -33,7 +35,7 @@
                     $error[] = 'Email address is already registered';
                 } else {
                     if ($user->register($user_name, $user_email, $user_password)) {
-                        $user->redirect('register.php?joined');
+                        $user->redirect('login.php');
                     }
                 }
             } catch (PDOException $e) {

@@ -5,6 +5,7 @@
         public $status = "OK";
         public $message;
         public $table;
+        public $row;
         public $rows_in_table;
         public $columns_in_table;
         public $data;
